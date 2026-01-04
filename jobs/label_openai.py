@@ -52,12 +52,12 @@ def _extract_first_json_object(text: str) -> str:
     m = re.search(r"\{.*\}", text, flags=re.DOTALL)
     return m.group(0) if m else ""
 
-def recup_title(limit=300):
+def recup_title():
     resp = (
         supabase
         .table("articles")
         .select("id,title,label")
-        .range(0, limit - 1)
+        .is_("label", "null")
         .execute()
     )
     return pd.DataFrame(resp.data)
@@ -110,8 +110,8 @@ def update_label_in_supabase(article_id: int, new_label: str):
         .execute()
     )
 
-def main(limit=300, only_if_empty=True, sleep_s=0.2):
-    df = recup_title(limit=limit)
+def main(only_if_empty=True, sleep_s=0.2):
+    df = recup_title()
 
     updated = 0
     failed = 0
@@ -144,4 +144,4 @@ def main(limit=300, only_if_empty=True, sleep_s=0.2):
     return updated, failed
 
 if __name__ == "__main__":
-    main(limit=300, only_if_empty=True, sleep_s=0.2)
+    main(only_if_empty=True, sleep_s=0.2)
