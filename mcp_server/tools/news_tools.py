@@ -6,7 +6,7 @@ def register(mcp) -> None:
     @mcp.tool()
     def newsbytheme(topic: str) -> List[Dict[str, Optional[str]]]:
         """
-        Tool MCP : récupère 50 articles NewsAPI liés à un thème.
+        Tool MCP : récupère 20 articles NewsAPI liés à un thème.
         """
         if not NEWSAPI_KEY:
             return [{
@@ -17,7 +17,8 @@ def register(mcp) -> None:
         params = {
             "q": topic,
             "language": "fr",
-            "pageSize": 50,
+            "pageSize": 20,
+            "sortBy" : "publishedAt",
             "apiKey": NEWSAPI_KEY,
         }
 
