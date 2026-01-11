@@ -1,0 +1,38 @@
+name: RSS to Supabase
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 20 * * *"
+
+jobs:
+  run-rss:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-rss.txt
+
+      - name: Run RSS ingestion
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python jobs/rss_to_supabase.py
+
+      - name: Run article scraper (feed_id = 3)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python jobs/scrap_full_articles.py

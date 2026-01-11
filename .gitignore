@@ -5,3 +5,4 @@ MCP/
 .env.local
 *.sqlite3
 .ipynb_checkpoints/
+*.ipynb
